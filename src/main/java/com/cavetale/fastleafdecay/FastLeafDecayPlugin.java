@@ -1,4 +1,4 @@
-package com.cavetale.fastleavesdecay;
+package com.cavetale.fastleafdecay;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -21,12 +21,12 @@ import org.bukkit.plugin.java.annotation.plugin.Plugin;
 import org.bukkit.plugin.java.annotation.plugin.Website;
 import org.bukkit.plugin.java.annotation.plugin.author.Author;
 
-@Plugin(name = "FastLeavesDecay", version = "1.0")
-@Description("Speed up Leaves Decay")
+@Plugin(name = "FastLeafDecay", version = "1.0")
+@Description("Speed up Leaf Decay")
 @ApiVersion(ApiVersion.Target.v1_13)
 @Author("StarTux")
 @Website("https://cavetale.com")
-public final class FastLeavesDecayPlugin extends JavaPlugin implements Listener {
+public final class FastLeafDecayPlugin extends JavaPlugin implements Listener {
     private final Set<String> onlyInWorlds = new HashSet<>();
     private final Set<String> excludeWorlds = new HashSet<>();
     private long breakDelay, decayDelay;
