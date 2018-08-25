@@ -11,6 +11,7 @@ FastLeavesDecay works automatically on all leaves which are not player placed an
 - Player placed leaves (with the `persistent` flag) are never decayed.
 - Limit decay to certain worlds or blacklist worlds in the configuration.
 - Play a sound and animation for better player feedback. This can be disabled in the config.
+- This plugin will call `LeavesDecayEvent` before taking action and respect its cancellation state.
 
 ## Compatibility
 This plugin uses Spigot's modern `BlockData` and `Tag` frameworks and will therefore only work on Spigot 1.13 or above.
