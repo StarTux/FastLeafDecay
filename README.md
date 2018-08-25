@@ -12,6 +12,9 @@ FastLeavesDecay works automatically on all leaves which are not player placed an
 - Limit decay to certain worlds or blacklist worlds in the configuration.
 - Play a sound and animation for better player feedback. This can be disabled in the config.
 
+## Compatibility
+This plugin uses Spigot's modern `BlockData` and `Tag` frameworks and will therefore only work on Spigot 1.13 or above.
+
 ## Installation
 - Drop the `FastLeavesDecay.jar` into your `plugins` folder and restart the server or load the plugin manually.
 - *(Optional)* Edit the `plugins/FastLeavesDecay/config.yml` file and restart the server or reload the plugin manually.
