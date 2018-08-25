@@ -8,7 +8,7 @@ Leaves in Minecraft will decay when they are not connected to a log block direct
 FastLeavesDecay works automatically on all leaves which are not player placed and does not require any permissions or configuration, although configuration is provided, see below.
 - Decay leaves quickly after the tree stem was cut.
 - Decay leaves quickly when natural decay happens.
-- Natural drops, such as saplings and saplings, will happen as usual.
+- Natural drops, such as saplings and apples, will happen as usual.
 - Player placed leaves (with the `persistent` flag) are never decayed.
 - Limit decay to certain worlds or blacklist worlds in the configuration.
 - Play a sound and animation for better player feedback. This can be disabled in the config.
