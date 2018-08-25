@@ -1,0 +1,12 @@
+# Leave this string list empty to enable all worlds.
+OnlyInWorlds: []
+# List worlds you wish to exclude from sped up leaves decay.
+ExcludeWorlds: []
+# Delay in ticks to check around a broken blocks.
+# Must be at least 5 to guarantee proper function.
+BreakDelay: 5
+# Delay in ticks to check around decaying leaves.
+DecayDelay: 2
+# Play additional effects
+SpawnParticles: true
+PlaySound: true
