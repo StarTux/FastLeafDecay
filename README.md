@@ -1,5 +1,5 @@
-# FastLeavesDecay
-Speed up leaves decay in Minecraft
+# FastLeafDecay
+Speed up leaf decay in Minecraft
 
 ## Purpose
 Leaves in Minecraft will decay when they are not connected to a log block directly or via other leaves by a distance of 6 blocks or less. The game will udpate their distance very quickly, but only gradually and very slowly arrange for their decay. This is where the **FastLeavesDecay** plugin comes in. It will realize whenever a leaves block gets disconnected from any nearby logs keeping it alive, and schedule a prompt decay. A variety of configuration options are included.
