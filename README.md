@@ -1,15 +1,10 @@
 # FastLeafDecay
 Speed up leaf decay in Minecraft
 
+![Leaves decaying instantaneously](https://i.imgur.com/d56fuXl.gif)
+
 ## Purpose
 Leaves in Minecraft will decay when they are not connected to a log block directly or via other leaves by a distance of 6 blocks or less. The game will udpate their distance very quickly, but only gradually and very slowly arrange for their decay. This is where the **FastLeafDecay** plugin comes in. It will realize whenever a leaves block gets disconnected from any nearby logs keeping it alive, and schedule a prompt decay. A variety of configuration options are included.
-
-## Links
-- [Source code](https://github.com/StarTux/FastLeafDecay) on Github
-- [BukkitDev plugin page](https://dev.bukkit.org/projects/fastleafdecay)
-- [SpigotMC resource page](https://www.spigotmc.org/resources/fastleafdecay.60237/)
-
-![Leaves decaying instantaneously](https://i.imgur.com/d56fuXl.gif)
 
 ## Features
 FastLeafDecay works automatically on all leaves which are not player placed and does not require any permissions or configuration, although configuration is provided, see below.
@@ -44,3 +39,8 @@ DecayDelay: 2
 SpawnParticles: true
 PlaySound: true
 ```
+
+## Links
+- [Source code](https://github.com/StarTux/FastLeafDecay) on Github
+- [BukkitDev plugin page](https://dev.bukkit.org/projects/fastleafdecay)
+- [SpigotMC resource page](https://www.spigotmc.org/resources/fastleafdecay.60237/)
