@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Set;
 import org.bukkit.Effect;
 import org.bukkit.Material;
-import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -18,7 +17,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.java.annotation.plugin.ApiVersion;
 import org.bukkit.plugin.java.annotation.plugin.Description;
 import org.bukkit.plugin.java.annotation.plugin.Plugin;
 import org.bukkit.plugin.java.annotation.plugin.Website;
@@ -26,7 +24,6 @@ import org.bukkit.plugin.java.annotation.plugin.author.Author;
 
 @Plugin(name = "FastLeafDecay", version = "1.8-compat-1.0")
 @Description("Speed up Leaf Decay")
-@ApiVersion(ApiVersion.Target.v1_13)
 @Author("StarTux")
 @Website("https://cavetale.com")
 public final class FastLeafDecayPlugin extends JavaPlugin implements Listener {
