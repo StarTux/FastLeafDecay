@@ -6,10 +6,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
-import org.bukkit.SoundCategory;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
@@ -169,10 +169,10 @@ public final class FastLeafDecayPlugin extends JavaPlugin implements Listener {
         getServer().getPluginManager().callEvent(event);
         if (event.isCancelled()) return;
         if (spawnParticles) {
-            block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(0.5, 0.5, 0.5), 8, 0.2, 0.2, 0.2, 0, block.getType().getNewData(block.getData()));
+            block.getWorld().playEffect(block.getLocation(), Effect.TILE_BREAK, Material.GRASS.getId());
         }
         if (playSound) {
-            block.getWorld().playSound(block.getLocation(), Sound.BLOCK_GRASS_BREAK, SoundCategory.BLOCKS, 0.05f, 1.2f);
+            block.getWorld().playSound(block.getLocation(), Sound.DIG_GRASS, 0.05f, 1.2f);
         }
         block.breakNaturally();
     }
