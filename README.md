@@ -17,7 +17,8 @@ FastLeafDecay works automatically on all leaves which are not player placed and 
 - Devs: This plugin calls `LeavesDecayEvent` before taking action and respects its cancellation state.
 
 ## Compatibility
-FastLeafDecay uses Spigot's modern `BlockData` and `Tag` frameworks and will therefore only work on Spigot 1.13 or above.
+FastLeafDecay uses Spigot's modern `BlockData` and `Tag` frameworks and will therefore only work on Bukkit or Spigot **1.13** or above.
+Builds compatible with Bukkit **1.12** or **1.8** can be found in the *Links* section below.
 
 ## Installation
 - Drop the `FastLeafDecay.jar` into your `plugins` folder and restart the server or load the plugin manually.
@@ -44,3 +45,5 @@ PlaySound: true
 - [Source code](https://github.com/StarTux/FastLeafDecay) on Github
 - [BukkitDev plugin page](https://dev.bukkit.org/projects/fastleafdecay)
 - [SpigotMC resource page](https://www.spigotmc.org/resources/fastleafdecay.60237/)
+- [1.12 compatibility version](https://github.com/StarTux/FastLeafDecay/releases/tag/1.12-compat-1.0)
+- [1.8 compatibility version](https://github.com/StarTux/FastLeafDecay/releases/tag/1.8-compat-1.0)
