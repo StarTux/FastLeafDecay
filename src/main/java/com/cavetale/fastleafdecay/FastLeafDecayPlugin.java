@@ -26,7 +26,6 @@ import org.bukkit.plugin.java.annotation.plugin.author.Author;
 
 @Plugin(name = "FastLeafDecay", version = "1.12-compat-1.0")
 @Description("Speed up Leaf Decay")
-@ApiVersion(ApiVersion.Target.v1_13)
 @Author("StarTux")
 @Website("https://cavetale.com")
 public final class FastLeafDecayPlugin extends JavaPlugin implements Listener {
