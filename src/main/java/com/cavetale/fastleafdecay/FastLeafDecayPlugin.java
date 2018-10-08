@@ -1,14 +1,17 @@
 package com.cavetale.fastleafdecay;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
-import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.data.type.Leaves;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -33,6 +36,7 @@ public final class FastLeafDecayPlugin extends JavaPlugin implements Listener {
     private boolean spawnParticles, playSound;
     private final Set<Block> scheduledBlocks = new HashSet<>();
     private static final BlockFace[] NEIGHBORS = {BlockFace.UP, BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST, BlockFace.DOWN};
+    private static final int PLAYER_PLACED_BIT = 4;
 
     @Override
     public void onEnable() {
@@ -76,6 +80,49 @@ public final class FastLeafDecayPlugin extends JavaPlugin implements Listener {
         onBlockRemove(event.getBlock(), decayDelay);
     }
 
+    private boolean isLog(Material mat) {
+        switch (mat) {
+        case LOG: case LOG_2: return true;
+        default: return false;
+        }
+    }
+
+    private boolean isLeaf(Material mat) {
+        switch (mat) {
+        case LEAVES: case LEAVES_2: return true;
+        default: return false;
+        }
+    }
+
+    private boolean isPersistent(Block block) {
+        return ((int)block.getData() & PLAYER_PLACED_BIT) != 0;
+    }
+
+    private int getDistance(Block block) {
+        List<Block> todo = new ArrayList<>();
+        todo.add(block);
+        Set<Block> done = new HashSet<>();
+        Map<Block, Integer> distances = new HashMap<>();
+        distances.put(block, 0);
+        while (!todo.isEmpty()) {
+            Block current = todo.remove(0);
+            done.add(current);
+            int distance = distances.get(current);
+            if (distance >= 5) return distance;
+            for (BlockFace face: new BlockFace[] {BlockFace.UP, BlockFace.DOWN, BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST}) {
+                Block nbor = current.getRelative(face);
+                if (done.contains(nbor)) continue;
+                if (isLog(nbor.getType())) {
+                    return distance + 1;
+                } else if (isLeaf(nbor.getType())) {
+                    todo.add(nbor);
+                    distances.put(nbor, distance + 1);
+                }
+            }
+        }
+        return 5;
+    }
+
     /**
      * Check if block is either leaves or a log and whether any of the
      * blocks surrounding it are non-persistent leaves blocks.  If so,
@@ -87,15 +134,14 @@ public final class FastLeafDecayPlugin extends JavaPlugin implements Listener {
      * @param delay the delay of the scheduled check, in ticks
      */
     private void onBlockRemove(final Block oldBlock, long delay) {
-        if (!Tag.LOGS.isTagged(oldBlock.getType()) && !Tag.LEAVES.isTagged(oldBlock.getType())) return;
+        if (!isLog(oldBlock.getType()) && !isLeaf(oldBlock.getType())) return;
         final String worldName = oldBlock.getWorld().getName();
         if (!onlyInWorlds.isEmpty() && !onlyInWorlds.contains(worldName)) return;
         if (excludeWorlds.contains(worldName)) return;
         for (BlockFace neighborFace: NEIGHBORS) {
             final Block block = oldBlock.getRelative(neighborFace);
-            if (!Tag.LEAVES.isTagged(block.getType())) continue;
-            Leaves leaves = (Leaves)block.getBlockData();
-            if (leaves.isPersistent()) continue;
+            if (!isLeaf(block.getType())) continue;
+            if (isPersistent(block)) continue;
             if (scheduledBlocks.contains(block)) continue;
             scheduledBlocks.add(block);
             getServer().getScheduler().runTaskLater(this, () -> decay(block), delay);
@@ -116,15 +162,14 @@ public final class FastLeafDecayPlugin extends JavaPlugin implements Listener {
      */
     private void decay(Block block) {
         if (!scheduledBlocks.remove(block)) return;
-        if (!Tag.LEAVES.isTagged(block.getType())) return;
-        Leaves leaves = (Leaves)block.getBlockData();
-        if (leaves.isPersistent()) return;
-        if (leaves.getDistance() < 7) return;
+        if (!isLeaf(block.getType())) return;
+        if (isPersistent(block)) return;
+        if (getDistance(block) <= 4) return;
         LeavesDecayEvent event = new LeavesDecayEvent(block);
         getServer().getPluginManager().callEvent(event);
         if (event.isCancelled()) return;
         if (spawnParticles) {
-            block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(0.5, 0.5, 0.5), 8, 0.2, 0.2, 0.2, 0, block.getType().createBlockData());
+            block.getWorld().spawnParticle(Particle.BLOCK_DUST, block.getLocation().add(0.5, 0.5, 0.5), 8, 0.2, 0.2, 0.2, 0, block.getType().getNewData(block.getData()));
         }
         if (playSound) {
             block.getWorld().playSound(block.getLocation(), Sound.BLOCK_GRASS_BREAK, SoundCategory.BLOCKS, 0.05f, 1.2f);
