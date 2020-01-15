@@ -1,6 +1,10 @@
 package com.cavetale.fastleafdecay;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -23,12 +27,12 @@ public final class FastLeafDecayPlugin extends JavaPlugin implements Listener {
     private long decayDelay;
     private boolean spawnParticles;
     private boolean playSound;
-    private final Set<Block> scheduledBlocks = new HashSet<>();
-    private static final BlockFace[] NEIGHBORS = {
-        BlockFace.UP,
-        BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST,
-        BlockFace.DOWN
-    };
+    private boolean oneByOne;
+    private final List<Block> scheduledBlocks = new ArrayList<>();
+    private static final List<BlockFace> NEIGHBORS = Arrays
+        .asList(BlockFace.UP,
+                BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST,
+                BlockFace.DOWN);
 
     @Override
     public void onEnable() {
@@ -39,6 +43,7 @@ public final class FastLeafDecayPlugin extends JavaPlugin implements Listener {
         excludeWorlds.addAll(getConfig().getStringList("ExcludeWorlds"));
         breakDelay = getConfig().getLong("BreakDelay");
         decayDelay = getConfig().getLong("DecayDelay");
+        oneByOne = getConfig().getBoolean("OneByOne");
         spawnParticles = getConfig().getBoolean("SpawnParticles");
         playSound = getConfig().getBoolean("PlaySound");
         // Register events
@@ -90,14 +95,23 @@ public final class FastLeafDecayPlugin extends JavaPlugin implements Listener {
         final String worldName = oldBlock.getWorld().getName();
         if (!onlyInWorlds.isEmpty() && !onlyInWorlds.contains(worldName)) return;
         if (excludeWorlds.contains(worldName)) return;
+        // No return
+        Collections.shuffle(NEIGHBORS);
         for (BlockFace neighborFace: NEIGHBORS) {
             final Block block = oldBlock.getRelative(neighborFace);
             if (!Tag.LEAVES.isTagged(block.getType())) continue;
             Leaves leaves = (Leaves) block.getBlockData();
             if (leaves.isPersistent()) continue;
             if (scheduledBlocks.contains(block)) continue;
+            if (oneByOne) {
+                if (scheduledBlocks.isEmpty()) {
+                    getServer().getScheduler().runTaskLater(this, this::decayOne, delay);
+                }
+                scheduledBlocks.add(block);
+            } else {
+                getServer().getScheduler().runTaskLater(this, () -> decay(block), delay);
+            }
             scheduledBlocks.add(block);
-            getServer().getScheduler().runTaskLater(this, () -> decay(block), delay);
         }
     }
 
@@ -112,16 +126,19 @@ public final class FastLeafDecayPlugin extends JavaPlugin implements Listener {
      * This method calls {@link LeavesDecayEvent} and will not act if
      * the event is cancelled.
      * @param block The block
+     *
+     * @return true if the block was decayed, false otherwise.
      */
-    private void decay(Block block) {
-        if (!scheduledBlocks.remove(block)) return;
-        if (!Tag.LEAVES.isTagged(block.getType())) return;
+    private boolean decay(Block block) {
+        if (!scheduledBlocks.remove(block)) return false;
+        if (!block.getWorld().isChunkLoaded(block.getX() >> 4, block.getZ() >> 4)) return false;
+        if (!Tag.LEAVES.isTagged(block.getType())) return false;
         Leaves leaves = (Leaves) block.getBlockData();
-        if (leaves.isPersistent()) return;
-        if (leaves.getDistance() < 7) return;
+        if (leaves.isPersistent()) return false;
+        if (leaves.getDistance() < 7) return false;
         LeavesDecayEvent event = new LeavesDecayEvent(block);
         getServer().getPluginManager().callEvent(event);
-        if (event.isCancelled()) return;
+        if (event.isCancelled()) return false;
         if (spawnParticles) {
             block.getWorld()
                 .spawnParticle(Particle.BLOCK_DUST,
@@ -135,5 +152,29 @@ public final class FastLeafDecayPlugin extends JavaPlugin implements Listener {
                                        SoundCategory.BLOCKS, 0.05f, 1.2f);
         }
         block.breakNaturally();
+        return true;
+    }
+
+    /**
+     * Decay one block from the list of scheduled blocks. Schedule the
+     * same function again if the list is not empty.
+     * This gets called if OneByOne is activated in the
+     * config. Therefore, we wait at least one tick.
+     *
+     * This could undermine the BlockDelay if the DecayDelay
+     * significantly smaller and the list devoid of valid leaf blocks.
+     */
+    private void decayOne() {
+        boolean decayed = false;
+        do {
+            if (scheduledBlocks.isEmpty()) return;
+            Block block = scheduledBlocks.get(0);
+            decayed = decay(block); // Will remove block from list.
+        } while (!decayed);
+        if (!scheduledBlocks.isEmpty()) {
+            long delay = decayDelay;
+            if (delay <= 0) delay = 1L;
+            getServer().getScheduler().runTaskLater(this, this::decayOne, delay);
+        }
     }
 }

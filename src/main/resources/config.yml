@@ -7,6 +7,9 @@ ExcludeWorlds: []
 BreakDelay: 5
 # Delay in ticks to check around decaying leaves.
 DecayDelay: 2
+# Break blocks one by one. If set to true, no more than one leaf block
+# will be broken at once.
+OneByOne: false
 # Play additional effects
 SpawnParticles: true
 PlaySound: true
