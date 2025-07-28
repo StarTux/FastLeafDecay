@@ -27,7 +27,7 @@
     <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot-api</artifactId>
-      <version>1.21.7-R0.1-SNAPSHOT</version> <!-- Paper Version -->
+      <version>1.21.8-R0.1-SNAPSHOT</version> <!-- Paper Version -->
     </dependency>
 
     <!-- Lombok -->
