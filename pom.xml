@@ -1,17 +1,20 @@
 <project>
   <modelVersion>4.0.0</modelVersion>
 
+  <parent>
+    <groupId>com.cavetale.pom</groupId>
+    <artifactId>cavetale-pom-base</artifactId>
+    <version>0.1-SNAPSHOT</version>
+  </parent>
+
   <groupId>com.cavetale.fastleafdecay</groupId>
   <artifactId>fastleafdecay</artifactId>
   <version>1.0-SNAPSHOT</version>
 
   <name>FastLeafDecay</name>
-  <packaging>jar</packaging>
   <url>https://www.github.com/StarTux/FastLeafDecay</url>
+  <packaging>jar</packaging>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
   <repositories>
 
     <!-- Spigot Repo -->
@@ -34,30 +37,8 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.32</version>
       <scope>provided</scope>
     </dependency>
 
   </dependencies>
-  <build>
-    <finalName>${project.name}</finalName>
-    <plugins>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.2</version>
-        <configuration>
-          <source>21</source>
-          <target>21</target>
-          <showDeprecation>true</showDeprecation>
-          <showWarnings>true</showWarnings>
-          <compilerArgs>
-            <arg>-Xlint:unchecked</arg>
-          </compilerArgs>
-        </configuration>
-      </plugin>
-
-    </plugins>
-  </build>
 </project>
