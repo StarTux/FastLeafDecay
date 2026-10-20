@@ -1,4 +1,5 @@
 # FastLeafDecay
+
 Speed up leaf decay in Minecraft
 
 ![Leaves decaying instantaneously](https://i.imgur.com/d56fuXl.gif)
